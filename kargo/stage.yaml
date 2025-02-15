@@ -1,0 +1,213 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: kargo-helm
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  shard: kargo-agent
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: helm-guestbook
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars: 
+      - name: app
+        value: helm-guestbook
+      steps: 
+      - task: 
+          name: standard-process
+      # steps:
+      # - uses: git-clone
+      #   config:
+      #     repoURL: https://github.com/emilyxinyi/kargo-helm.git
+      #     checkout:
+      #     - fromFreight: true
+      #       path: ./src
+      #     - branch: main
+      #       path: ./out
+
+      # - uses: helm-update-image
+      #   as: update-image
+      #   config:
+      #     path: ./out/env/dev/values.yaml
+      #     images:
+      #     - image: ghcr.io/emilyxinyi/guestbook
+      #       key: image.tag
+      #       value: Tag
+
+      # # Commit the changes to the Git repository.
+      # - uses: git-commit
+      #   as: commit
+      #   config:
+      #     path: ./out
+      #     messageFromSteps:
+      #     - update-image
+
+      # # Push the changes to the Git repository.
+      # - uses: git-push
+      #   config:
+      #     path: ./out
+
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: kargo-helm-dev
+      #       sources:
+      #       - repoURL: https://github.com/emilyxinyi/kargo-helm.git
+# ---
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: Stage
+# metadata:
+#   name: staging
+#   namespace: kargo-helm
+#   annotations:
+#     kargo.akuity.io/color: yellow
+# spec:
+#   shard: kargo-agent
+#   requestedFreight:
+#   - origin:
+#       kind: Warehouse
+#       name: guestbook
+#     sources:
+#       stages: 
+#       - dev
+#   - origin:
+#       kind: Warehouse
+#       name: features
+#     sources:
+#       stages: 
+#       - dev
+#   promotionTemplate:
+#     spec:
+#       steps:
+#       - uses: git-clone
+#         config:
+#           repoURL: https://github.com/emilyxinyi/kargo-helm.git
+#           checkout:
+#           - fromFreight: true
+#             path: ./src
+#           - branch: main
+#             path: ./out
+
+#       - uses: helm-update-image
+#         as: update-image
+#         config:
+#           path: ./out/env/staging/values.yaml
+#           images:
+#           - image: ghcr.io/emilyxinyi/guestbook
+#             key: image.tag
+#             value: Tag
+
+#       - uses: copy
+#         config:
+#           inPath: ./src/base/feature-flags.yaml
+#           outPath: ./out/env/staging/feature-flags.yaml
+
+#       # Commit the changes to the Git repository.
+#       - uses: git-commit
+#         as: commit
+#         config:
+#           path: ./out
+#           messageFromSteps:
+#           - update-image
+
+#       # Push the changes to the Git repository.
+#       - uses: git-push
+#         config:
+#           path: ./out
+
+#       - uses: argocd-update
+#         config:
+#           apps:
+#           - name: kargo-helm-staging
+#             sources:
+#             - repoURL: https://github.com/emilyxinyi/kargo-helm.git
+#       - uses: http
+#         as: cat-facts
+#         config:
+#           method: GET
+#           url: https://www.catfacts.net/api/
+#           outputs:
+#           - name: status
+#             fromExpression: response.status
+#           - name: fact1
+#             fromExpression: response.body.facts[0]
+#           - name: fact2
+#             fromExpression: response.body.facts[1]
+#   verification:
+#     analysisTemplates:
+#     - name: staging-verification
+# ---
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: Stage
+# metadata:
+#   name: prod
+#   namespace: kargo-helm
+#   annotations:
+#     kargo.akuity.io/color: green
+# spec:
+#   shard: kargo-agent
+#   requestedFreight:
+#   - origin:
+#       kind: Warehouse
+#       name: guestbook
+#     sources:
+#       stages: 
+#       - staging
+#   - origin:
+#       kind: Warehouse
+#       name: features
+#     sources:
+#       sources:
+#       stages: 
+#       - staging
+#   promotionTemplate:
+#     spec:
+#       steps:
+#       - uses: git-clone
+#         config:
+#           repoURL: https://github.com/emilyxinyi/kargo-helm.git
+#           checkout:
+#           - fromFreight: true
+#             path: ./src
+#           - branch: main
+#             path: ./out
+
+#       - uses: helm-update-image
+#         as: update-image
+#         config:
+#           path: ./out/env/prod/values.yaml
+#           images:
+#           - image: ghcr.io/emilyxinyi/guestbook
+#             key: image.tag
+#             value: Tag
+
+#       - uses: copy
+#         config:
+#           inPath: ./src/base/feature-flags.yaml
+#           outPath: ./out/env/prod/feature-flags.yaml
+
+#       # Commit the changes to the Git repository.
+#       - uses: git-commit
+#         as: commit
+#         config:
+#           path: ./out
+#           messageFromSteps:
+#           - update-image
+
+#       # Push the changes to the Git repository.
+#       - uses: git-push
+#         config:
+#           path: ./out
+
+#       - uses: argocd-update
+#         config:
+#           apps:
+#           - name: kargo-helm-prod
+#             sources:
+#             - repoURL: https://github.com/emilyxinyi/kargo-helm.git

@@ -1,0 +1,46 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: PromotionTask
+metadata:
+  name: standard-process
+  namespace: helm-guestbook
+spec: 
+  vars: 
+  - name: app
+  steps: 
+  - uses: git-clone
+    config:
+      repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+      checkout:
+      - fromFreight: true
+        path: ./src
+      - branch: stage/${{ ctx.stage }}
+        path: ./out
+  - uses: git-clear
+    config:
+      path: ./out
+  - uses: helm-update-image
+    as: update-image
+    config:
+      path: ./src/${{ vars.app }}/values.yaml
+      images:
+      - image: gcr.io/heptio-images/ks-guestbook-demo
+        key: image.tag
+        value: Tag
+  # Commit the changes to the Git repository.
+  - uses: git-commit
+    as: commit
+    config:
+      path: ./out
+      messageFromSteps:
+      - update-image
+  # Push the changes to the Git repository.
+  - uses: git-push
+    config:
+      path: ./out
+      targetBranch: stage/${{ ctx.stage }}
+  - uses: argocd-update
+    config:
+      apps:
+      - name: ${{ vars.app }}-${{ ctx.stage }}
+        sources:
+        - repoURL: https://github.com/emilyxinyi/kargo-helm.git
