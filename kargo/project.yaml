@@ -8,7 +8,7 @@ metadata:
 spec: 
   promotionPolicies:
   - stage: test
-  #   autoPromotionEnabled: true
+    autoPromotionEnabled: true
   # - stage: uat
   #   autoPromotionEnabled: true
   # - stage: prod-uswest

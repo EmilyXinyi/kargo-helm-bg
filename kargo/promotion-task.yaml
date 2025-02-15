@@ -11,9 +11,10 @@ spec:
     config:
       repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
       checkout:
-      - fromFreight: true
+      - branch: main
         path: ./src
       - branch: stage/${{ ctx.stage }}
+        create: true
         path: ./out
   - uses: git-clear
     config:
@@ -23,7 +24,7 @@ spec:
     config:
       path: ./src/${{ vars.app }}/values.yaml
       images:
-      - image: gcr.io/heptio-images/ks-guestbook-demo
+      - image: ghcr.io/emilyxinyi/${{ vars.app }}
         key: image.tag
         value: Tag
   # Commit the changes to the Git repository.
@@ -43,4 +44,4 @@ spec:
       apps:
       - name: ${{ vars.app }}-${{ ctx.stage }}
         sources:
-        - repoURL: https://github.com/emilyxinyi/kargo-helm.git
+        - repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
