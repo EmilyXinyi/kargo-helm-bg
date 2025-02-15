@@ -6,6 +6,7 @@ metadata:
 spec: 
   vars: 
   - name: app
+  - name: image
   steps: 
   - uses: git-clone
     config:
@@ -24,7 +25,7 @@ spec:
     config:
       path: ./src/${{ vars.app }}/values.yaml
       images:
-      - image: ghcr.io/emilyxinyi/${{ vars.app }}
+      - image: ghcr.io/emilyxinyi/${{ vars.image }}
         key: image.tag
         value: Tag
   # Commit the changes to the Git repository.
@@ -39,7 +40,7 @@ spec:
     config:
       path: ./out
       targetBranch: stage/${{ ctx.stage }}
-  - uses: argocd-update
+  - uses: argocd-update # this is likely not going to work bc I haven't created the apps but we will see when we get there
     config:
       apps:
       - name: ${{ vars.app }}-${{ ctx.stage }}
