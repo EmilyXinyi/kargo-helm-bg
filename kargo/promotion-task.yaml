@@ -2,7 +2,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: PromotionTask
 metadata:
   name: standard-process-helm-bg
-  namespace: guestbook
+  namespace: kargo-helm-bg
 spec: 
   vars: 
   - name: app
