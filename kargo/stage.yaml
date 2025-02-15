@@ -19,6 +19,8 @@ spec:
       vars: 
       - name: app
         value: blue-green
+      - name: image
+        value: guestbook
       steps: 
       - task: 
           name: standard-process-helm-bg
