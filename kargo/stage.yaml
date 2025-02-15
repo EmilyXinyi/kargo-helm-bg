@@ -20,7 +20,7 @@ spec:
         value: helm-guestbook
       steps: 
       - task: 
-          name: standard-process
+          name: standard-process-helm-bg
       # steps:
       # - uses: git-clone
       #   config:
