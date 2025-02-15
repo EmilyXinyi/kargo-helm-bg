@@ -6,8 +6,8 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/emilyxinyi/guestbook
-  tag: latest
   pullPolicy: IfNotPresent
+  tag: latest
 
 containerPort: 80
 
