@@ -40,9 +40,9 @@ spec:
     config:
       path: ./out
       targetBranch: stage/${{ ctx.stage }}
-  - uses: argocd-update # this is likely not going to work bc I haven't created the apps but we will see when we get there
+  - uses: argocd-update 
     config:
       apps:
-      - name: ${{ vars.app }}-${{ ctx.stage }}
+      - name: bg-${{ ctx.stage }}
         sources:
         - repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
