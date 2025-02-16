@@ -7,7 +7,7 @@ spec:
   generators:
   - list:
       elements:
-      - stage: test
+      - stage: dev
         cluster: mac1
       - stage: uat
         cluster: mac1
