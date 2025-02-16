@@ -25,7 +25,7 @@ spec:
       source:
         repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
         targetRevision: stage/{{stage}}
-        path: blue-green
+        path: ../blue-green
       destination:
         name: "{{cluster}}"
         namespace: kargo-helm-bg-{{stage}}
