@@ -32,7 +32,7 @@ spec:
   - uses: git-commit
     as: commit
     config:
-      path: ./out
+      path: ./src
       messageFromSteps:
       - update-image
   # Push the changes to the Git repository.

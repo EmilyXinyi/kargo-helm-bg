@@ -24,3 +24,87 @@ spec:
       steps: 
       - task: 
           name: standard-process-helm-bg
+--- 
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: uat
+  namespace: kargo-helm-bg
+  annotations:
+    kargo.akuity.io/color: yellow
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  shard: kargo-agent
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: helm-guestbook
+    sources:
+      stages:
+      - dev
+  promotionTemplate:
+    spec:
+      vars: 
+      - name: app
+        value: blue-green
+      - name: image
+        value: guestbook
+      steps: 
+      - task: 
+          name: standard-process-helm-bg
+--- 
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-useast
+  namespace: kargo-helm-bg
+  annotations:
+    kargo.akuity.io/color: green
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  shard: kargo-agent
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: helm-guestbook
+    sources:
+      stages:
+      - uat
+  promotionTemplate:
+    spec:
+      vars: 
+      - name: app
+        value: blue-green
+      - name: image
+        value: guestbook
+      steps: 
+      - task: 
+          name: standard-process-helm-bg
+--- 
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-uswest
+  namespace: kargo-helm-bg
+  annotations:
+    kargo.akuity.io/color: blue
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  shard: kargo-agent
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: helm-guestbook
+    sources:
+      stages:
+      - uat
+  promotionTemplate:
+    spec:
+      vars: 
+      - name: app
+        value: blue-green
+      - name: image
+        value: guestbook
+      steps: 
+      - task: 
+          name: standard-process-helm-bg
