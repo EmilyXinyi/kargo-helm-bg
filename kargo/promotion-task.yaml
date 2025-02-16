@@ -43,6 +43,6 @@ spec:
   - uses: argocd-update 
     config:
       apps:
-      - name: bg-${{ ctx.stage }}
+      - name: kargo-helm-bg-${{ ctx.stage }}
         sources:
         - repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
