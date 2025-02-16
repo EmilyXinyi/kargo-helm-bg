@@ -20,13 +20,19 @@ spec:
   - uses: git-clear
     config:
       path: ./out
-  - uses: helm-update-image
-    as: update-image
-    config:
+  # - uses: helm-update-image
+  #   as: update-image
+  #   config:
+  #     path: ./src/${{ vars.app }}/values.yaml
+  #     images:
+  #     - image: ghcr.io/emilyxinyi/${{ vars.image }}
+  #       key: image.tag
+  #       value: Tag
+  - uses: yaml-update
+    config: 
       path: ./src/${{ vars.app }}/values.yaml
-      images:
-      - image: ghcr.io/emilyxinyi/${{ vars.image }}
-        key: image.tag
+      updates: 
+      - key: image.tag
         value: Tag
   # Commit the changes to the Git repository.
   - uses: git-commit
