@@ -52,9 +52,9 @@ spec:
       steps: 
       - task: 
           name: standard-process-helm-bg
-    verification:
-      analysisTemplates:
-      - name: guestbook-verification-3
+  verification:
+    analysisTemplates:
+    - name: guestbook-verification-3
 --- 
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
