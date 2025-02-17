@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kargo-helm-bg
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - stage: dev
+        cluster: mac1
+      - stage: uat
+        cluster: mac1
+      - stage: prod-useast
+        cluster: mac2
+      - stage: prod-uswest
+        cluster: mac2
+  template:
+    metadata:
+      name: kargo-helm-bg-{{stage}}
+      annotations:
+        kargo.akuity.io/authorized-stage: kargo-helm-bg:{{stage}}
+    spec:
+      project: kargo-helm-bg
+      source:
+        repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+        targetRevision: stage/{{stage}}
+        path: blue-green
+      destination:
+        name: "{{cluster}}"
+        namespace: kargo-helm-bg-{{stage}}
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
