@@ -52,6 +52,9 @@ spec:
       steps: 
       - task: 
           name: standard-process-helm-bg
+    verification:
+      analysisTemplates:
+      - name: guestbook-verification-3
 --- 
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -106,5 +109,60 @@ spec:
       - name: image
         value: guestbook
       steps: 
-      - task: 
-          name: standard-process-helm-bg
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+          checkout:
+          - branch: main
+            path: ./src
+          - branch: stage/${{ ctx.stage }}
+            create: true
+            path: ./out
+      - uses: git-clear
+        config:
+          path: ./out
+      - uses: yaml-update
+        config: 
+          path: ./src/${{ vars.app }}/values.yaml
+          updates: 
+          - key: image.tag
+            value: Tag
+      - uses: copy
+        config:
+          inPath: ./src/${{ vars.app }}/values.yaml
+          outPath: ./out/${{ vars.app }}/values.yaml
+      # Commit the changes to the Git repository.
+      - uses: git-commit
+        as: commit
+        config:
+          path: ./out
+          messageFromSteps:
+          - update-image
+      # Push the changes to the Git repository.
+      - uses: git-push
+        as: push
+        config:
+          path: ./out
+          targetBranch: stage/${{ ctx.stage }}
+      - uses: git-open-pr
+        as: open-pr
+        config:
+          repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+          createTargetBranch: true
+          sourceBranch: ${{ outputs.push.branch }}
+          targetBranch: stage/prod-uswest
+      - uses: git-wait-for-pr
+        as: wait-for-pr
+        config:
+          repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+          prNumber: ${{ outputs['open-pr'].prNumber }}
+      - uses: compose-output
+        as: commit-link
+        config:
+          url: https://github.com/emilyxinyi/kargo-helm-bg/commit/${{ outputs['wait-for-pr'].commit }}
+      - uses: argocd-update 
+        config:
+          apps:
+          - name: kargo-helm-bg-${{ ctx.stage }}
+            sources:
+            - repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git

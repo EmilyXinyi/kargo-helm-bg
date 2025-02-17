@@ -9,7 +9,5 @@ spec:
   promotionPolicies:
   - stage: dev
     autoPromotionEnabled: true
-  # - stage: uat
-  #   autoPromotionEnabled: true
-  # - stage: prod-uswest
-  #   autoPromotionEnabled: true
+  - stage: uat
+    autoPromotionEnabled: true
