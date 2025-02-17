@@ -143,14 +143,14 @@ spec:
         as: push
         config:
           path: ./out
-          # targetBranch: stage/${{ ctx.stage }}
+          generateTargetBranch: true
       - uses: git-open-pr
         as: open-pr
         config:
           repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
           createTargetBranch: true
-          sourceBranch: ${{ outputs.push.branch }}
           targetBranch: stage/prod-uswest
+          sourceBranch: ${{ outputs.push.branch }}
       - uses: git-wait-for-pr
         as: wait-for-pr
         config:
