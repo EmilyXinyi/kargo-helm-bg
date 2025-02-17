@@ -7,7 +7,9 @@ replicaCount: 1
 image:
   repository: ghcr.io/emilyxinyi/guestbook
   pullPolicy: IfNotPresent
-  tag: 0.1.7
+  tag: 0.1.0
+
+containerPort: 80
 
 service:
   type: ClusterIP
