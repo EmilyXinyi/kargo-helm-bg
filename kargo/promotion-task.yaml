@@ -1,0 +1,60 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: PromotionTask
+metadata:
+  name: standard-process-helm-bg
+  namespace: kargo-helm-bg
+spec: 
+  vars: 
+  - name: app
+  - name: image
+  steps: 
+  - uses: git-clone
+    config:
+      repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+      checkout:
+      - branch: main
+        path: ./src
+      - branch: stage/${{ ctx.stage }}
+        create: true
+        path: ./out
+  - uses: git-clear
+    config:
+      path: ./out
+  # - uses: helm-update-image
+  #   as: update-image
+  #   config:
+  #     path: ./src/${{ vars.app }}/values.yaml
+  #     images:
+  #     - image: ghcr.io/emilyxinyi/${{ vars.image }}
+  #       key: image.tag
+  #       value: Tag
+  - uses: yaml-update
+    config: 
+      path: ./src/${{ vars.app }}/values.yaml
+      updates: 
+      - key: image.tag
+        value: Tag
+  - uses: copy
+    config:
+      # inPath: ./src/${{ vars.app }}/values.yaml
+      # outPath: ./out/${{ vars.app }}/values.yaml
+      inPath: ./src
+      outPath: ./out
+  # Commit the changes to the Git repository.
+  - uses: git-commit
+    as: commit
+    config:
+      path: ./out
+      messageFromSteps:
+      - update-image
+  # Push the changes to the Git repository.
+  - uses: git-push
+    config:
+      path: ./out
+      targetBranch: stage/${{ ctx.stage }}
+  - uses: argocd-update 
+    config:
+      apps:
+      - name: kargo-helm-bg-${{ ctx.stage }}
+        sources:
+        - repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git

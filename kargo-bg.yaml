@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kargo-blue-green
+spec:
+  project: kargo-helm-bg
+  source:
+    repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+    path: kargo
+  destination:
+    name: kargo1
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true

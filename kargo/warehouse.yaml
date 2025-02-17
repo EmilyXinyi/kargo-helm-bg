@@ -1,0 +1,19 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: helm-guestbook
+  namespace: kargo-helm-bg
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  shard: kargo-agent
+  subscriptions:
+  - git: 
+      repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
+      branch: main
+  - image:
+      repoURL: ghcr.io/emilyxinyi/guestbook
+      imageSelectionStrategy: SemVer
+
+
+
