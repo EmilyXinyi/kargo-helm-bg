@@ -149,8 +149,8 @@ spec:
         config:
           repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
           createTargetBranch: true
-          targetBranch: stage/prod-uswest
           sourceBranch: ${{ outputs.push.branch }}
+          targetBranch: stage/prod-uswest
       - uses: git-wait-for-pr
         as: wait-for-pr
         config:
