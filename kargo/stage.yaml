@@ -126,7 +126,7 @@ spec:
           path: ./src/${{ vars.app }}/values.yaml
           updates: 
           - key: image.tag
-            value: Tag
+            value: ${{ imageFrom("ghcr.io/emilyxinyi/guestbook", warehouse("helm-guestbook")).Tag }}
       - uses: copy
         config:
           inPath: ./src
@@ -149,8 +149,8 @@ spec:
         config:
           repoURL: https://github.com/emilyxinyi/kargo-helm-bg.git
           createTargetBranch: true
-          targetBranch: stage/prod-uswest
           sourceBranch: ${{ outputs.push.branch }}
+          targetBranch: stage/prod-uswest
       - uses: git-wait-for-pr
         as: wait-for-pr
         config:
