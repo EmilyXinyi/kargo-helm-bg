@@ -36,8 +36,10 @@ spec:
         value: Tag
   - uses: copy
     config:
-      inPath: ./src/${{ vars.app }}/values.yaml
-      outPath: ./out/${{ vars.app }}/values.yaml
+      # inPath: ./src/${{ vars.app }}/values.yaml
+      # outPath: ./out/${{ vars.app }}/values.yaml
+      inPath: ./src
+      outPath: ./out
   # Commit the changes to the Git repository.
   - uses: git-commit
     as: commit
