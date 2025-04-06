@@ -126,7 +126,7 @@ spec:
           path: ./src/${{ vars.app }}/values.yaml
           updates: 
           - key: image.tag
-            value: Tag
+            value: ${{ imageFrom("ghcr.io/emilyxinyi/guestbook", warehouse("helm-guestbook")).Tag }}
       - uses: copy
         config:
           inPath: ./src
