@@ -29,6 +29,7 @@ spec:
   #       key: image.tag
   #       value: Tag
   - uses: yaml-update
+    as: update-image
     config: 
       path: ./src/${{ vars.app }}/values.yaml
       updates: 
