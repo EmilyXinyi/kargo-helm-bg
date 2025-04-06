@@ -29,6 +29,7 @@ spec:
   #       key: image.tag
   #       value: Tag
   - uses: yaml-update
+    as: update-image
     config: 
       path: ./src/${{ vars.app }}/values.yaml
       updates: 
@@ -46,7 +47,7 @@ spec:
     config:
       path: ./out
       messageFromSteps:
-      - update-image
+          - update-image
   # Push the changes to the Git repository.
   - uses: git-push
     config:
