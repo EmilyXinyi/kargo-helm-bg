@@ -46,8 +46,7 @@ spec:
     as: commit
     config:
       path: ./out
-      messageFromSteps:
-          - update-image
+      message: ${{ task.outputs['update-image'].commitMessage }}
   # Push the changes to the Git repository.
   - uses: git-push
     config:
