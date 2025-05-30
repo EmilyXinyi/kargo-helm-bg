@@ -136,7 +136,7 @@ spec:
         as: commit
         config:
           path: ./out
-          message: ${{ outputs['update-image'].commitMessage }}
+          message: ${{ outputs['yaml-update'].commitMessage }}
       # Push the changes to the Git repository.
       - uses: git-push
         as: push
